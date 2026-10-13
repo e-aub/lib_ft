@@ -1,6 +1,7 @@
 #include "./libft.h"
-#include <unistd.h>
+#include <stdio.h>
 
 int main(){
-    write(1, ft_isprint(31) ? "1" : "0", 1);
+    int a = 10;
+    printf("%zu", ft_strlen(""));
 }
