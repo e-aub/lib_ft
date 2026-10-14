@@ -5,12 +5,9 @@
 int main(){
     // int a = 10;
     // printf("%zu", ft_strlen(""));
-    char s [] = "hello";
-    // int n = 48;
-    // unsigned char c = (unsigned char) n;
-    // printf("ascii value: %d\nchar: %s", c, &c);
-    char * z = &s[2];
-    ft_bzero(z, 0);
+    char src [] = "hello";
+    char dst[10];
+    ft_memcpy(dst, src, 5);
 
-    printf("%s", s);
+    printf("%s\n", dst);
 }
