@@ -6,14 +6,24 @@
 #include <unistd.h>
 
 int main(){
-    char *src = "Hello";
-    char dest[50] = "";
-    size_t expected = ft_strlcpy(dest, src, 6);
-
-    if (expected != ft_strlen(dest)){
-        printf("%s -----> expected: %zu, dest_len: %zu\n", "trunc occured", expected, ft_strlen(dest));
+    int s = 1;
+    {
+        char *src = " World";
+        char dest[9] = "";
+        dest[5] = 'k';
+        size_t expected = ft_strlcat(dest, src, s);
+        
+        printf("expected: %zu, new_dst: %s\n", expected, dest);
+        
     }
-
-    printf("%s\n", dest);
+    
+    {
+        char *src = " World";
+        char dest[9] = "";
+        dest[5] = 'k';
+        size_t expected = strlcat(dest, src, s);
+        
+        printf("expected: %zu, new_dst: %s\n", expected, dest);
+        
+    }
 }
-
