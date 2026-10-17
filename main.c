@@ -6,7 +6,11 @@
 #include <unistd.h>
 
 int main(){
-    char in [6] = "abcd";
-    char *c = ft_strchr(in, '\0');
+    char in [10] = "abcadcÆ";
+    char *c = ft_strrchr(in, 198);
     printf("%s\n", c);
+
+
+    char *z = strrchr(in, 198);
+    printf("original: %s\n", z);
 }
