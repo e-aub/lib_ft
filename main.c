@@ -9,9 +9,9 @@
 
 int main(void)
 {
-    char *big = "FizzBuzz";
-    char *little = "FizzBuzz";
+    // char *big = "FizzBuzz ";
+    // char *little = "FizzBuzz";
 
-        printf("_____________________\n%d", ft_strnstr(big, little, 10));
-        printf("_____________________\n%d", res2);
+        printf("_____________________\n%s", ft_strnstr("ab", "abc", 2));
+        // printf("_____________________\n%s", res2);
 }
