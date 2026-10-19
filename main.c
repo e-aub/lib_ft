@@ -2,11 +2,6 @@
 #include "./libft.h"
 #include <stdio.h>
 
-#include <string.h>
-#include <unistd.h>
-
-#include <stdio.h>
-#include <string.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -14,11 +9,27 @@
 
 int main(void)
 {
-	char str[] = "Hello, World!";
+	struct test
+    {
+        int a;
+    };
+    
 
-    void *res = memchr(str, 'o', 4);
-    void *res2 = ft_memchr(str, 'o', 4);
+    struct test instance_test = {
+        .a = 1
+    };
 
-        printf("_____________________\n%s", (char *)res);
-        printf("_____________________\n%s", (char *)res2);
+    struct test instance_test1 = {
+        .a = 1
+    };
+
+    
+	// char str1[] = "Hello, World!";
+
+
+    int res2 = ft_memcmp(&instance_test, &instance_test1, sizeof(struct test) + 3);
+    int res = memcmp(&instance_test, &instance_test1, sizeof(struct test) + 3);
+
+        printf("_____________________\n%d", res);
+        printf("_____________________\n%d", res2);
 }
