@@ -25,12 +25,10 @@
 int main(void)
 {
 
-    char *h = "";
-    char *w = "";
+    char *s = "xxxx";
+    char *set = "x";
 
-    char *res = ft_strjoin(h, w);
-    printf("%s, length: %zu", res, ft_strlen(res));
-    
-
+    char *res = ft_strtrim(s, set);
+    printf("%s\n", res);
     free(res);
 }
