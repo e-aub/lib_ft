@@ -9,9 +9,13 @@ void *ft_calloc(size_t nmemb, size_t size){
     }
 
     size_t total = nmemb * size;
+    
 
     void *allo = malloc(total);
     if (allo == NULL){
+        if (total == 0){
+            return malloc(1);
+        }
         return NULL;
     }
     ft_bzero(allo, total);
