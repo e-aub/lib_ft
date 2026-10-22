@@ -12,109 +12,152 @@
 #include <errno.h>
 #include <limits.h>
 
-static int  check_zero(const void *ptr, size_t total)
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+#include "./libft.h"
+
+static int  g_tests = 0;
+static int  g_failed = 0;
+
+void    test_strdup(const char *input, const char *name)
 {
-    const unsigned char *bytes;
-    size_t              i;
+    char    *original;
+    char    *custom;
+    int     same_content;
+    int     separate_memory;
 
-    if (ptr == NULL)
-        return (0);
-    bytes = (const unsigned char *)ptr;
-    i = 0;
-    while (i < total)
+    original = strdup(input);
+    custom = ft_strdup(input);
+    g_tests++;
+
+    if (original == NULL || custom == NULL)
     {
-        if (bytes[i] != 0)
-            return (0);
-        i++;
+        printf("[%s] %s: allocation failed\n",
+            (original == NULL && custom == NULL) ? "BOTH NULL" : "FAIL",
+            name);
+        if (original != NULL || custom != NULL)
+            g_failed++;
+        free(original);
+        free(custom);
+        return ;
     }
-    return (1);
-}
 
-static void test_case(size_t nmemb, size_t size)
-{
-    void    *original;
-    void    *mine;
-    size_t  total;
-    int     original_null;
-    int     mine_null;
-    int     same_result;
+    same_content = (strcmp(original, custom) == 0);
+    separate_memory = (original != custom);
 
-    total = nmemb * size;
-    errno = 0;
-    original = calloc(nmemb, size);
-    original_null = (original == NULL);
-    errno = 0;
-    mine = ft_calloc(nmemb, size);
-    mine_null = (mine == NULL);
-    same_result = 1;
-
-    if (original_null != mine_null)
-        same_result = 0;
-    if (!original_null && total <= 1000000)
+    if (same_content && separate_memory)
+        printf("[PASS] %s\n", name);
+    else
     {
-        if (!check_zero(original, total) || !check_zero(mine, total))
-            same_result = 0;
-        if (memcmp(original, mine, total) != 0)
-            same_result = 0;
+        printf("[FAIL] %s | content: %s | separate memory: %s\n",
+            name,
+            same_content ? "OK" : "DIFFERENT",
+            separate_memory ? "YES" : "NO");
+        g_failed++;
     }
-    printf("%s | nmemb=%zu size=%zu total=%zu | libc=%p ft=%p\n",
-        same_result ? "PASS" : "FAIL",
-        nmemb, size, total, original, mine);
+
     free(original);
-    free(mine);
+    free(custom);
 }
 
 int main(void)
 {
-    size_t max;
+    char    empty[] = "";
+    char    one[] = "a";
+    char    normal[] = "Hello, World!";
+    char    spaces[] = "   ";
+    char    digits[] = "0123456789";
+    char    punctuation[] = "!@#$%^&*()_+-=[]{};':\",./<>?";
+    char    escaped[] = "\t\n\r\v\f\a\b";
+    char    embedded[] = {'a', 'b', '\0', 'c', 'd', '\0'};
+    char    long_string[10001];
+    int     i;
 
-    max = SIZE_MAX;
     printf("=== Basic cases ===\n");
-    test_case(0, 0);
-    test_case(0, 1);
-    test_case(1, 0);
-    test_case(1, 1);
-    test_case(1, 10);
+    test_strdup(empty, "Empty string");
+    test_strdup(one, "Single character");
+    test_strdup(normal, "Normal sentence");
+    test_strdup("Hello", "Short literal");
+    test_strdup("a", "Single letter literal");
+    test_strdup(" ", "Single space");
+    test_strdup(spaces, "Multiple spaces");
 
-    unsigned char *original = (unsigned char *)ft_calloc(1, 10);
-    (void) original;
-    // size_t i = 0;
-    // while (i < 10)
-    // {
-    //     printf("%d, ", original[i]);
-    //     i++;
-    // }
+    printf("\n=== Character variety ===\n");
+    test_strdup(digits, "Digits");
+    test_strdup(punctuation, "Punctuation");
+    test_strdup(escaped, "Whitespace and control characters");
+    test_strdup("UPPER lower MiXeD", "Mixed case");
+    test_strdup("cafe", "Plain ASCII text");
+    test_strdup("line1\nline2", "Newline inside string");
+    test_strdup("tab\there", "Tab inside string");
 
-    
+    printf("\n=== String boundaries ===\n");
+    test_strdup(embedded, "Embedded null terminator");
+    test_strdup("a\0ignored", "Literal with embedded null");
+    test_strdup("end", "String ending at terminator");
 
-    test_case(10, 1);
-    test_case(10, 10);
-    test_case(100, 100);
-    test_case(1024, 1024);
+    printf("\n=== Length tests ===\n");
+    for (i = 0; i < 10000; i++)
+        long_string[i] = 'x';
+    long_string[10000] = '\0';
 
-    printf("\n=== Different element sizes ===\n");
-    test_case(7, sizeof(char));
-    test_case(7, sizeof(int));
-    test_case(7, sizeof(long));
-    test_case(7, sizeof(void *));
-    test_case(3, 17);
-    test_case(17, 3);
+    test_strdup("123456789012345678901234567890",
+        "30-character string");
+    test_strdup(long_string, "10,000-character string");
 
-    printf("\n=== Large allocation requests ===\n");
-    test_case(max, 1);
-    test_case(max / 2, 2);
-    test_case(max / 2 + 1, 2);
-    test_case(max, 2);
-    test_case(max / 4 + 1, 4);
-    test_case(max / 8 + 1, 8);
+    printf("\n=== Independent allocation tests ===\n");
+    {
+        char    *a;
+        char    *b;
 
-    printf("\n=== Boundary multiplication cases ===\n");
-    test_case(max / 2, 2);
-    test_case(max / 2 + 1, 2);
-    test_case(max / 3, 3);
-    test_case(max / 3 + 1, 3);
-    test_case(max / 10, 10);
-    test_case(max / 10 + 1, 10);
+        a = ft_strdup("independent");
+        b = ft_strdup("independent");
+        g_tests++;
+        if (a != NULL && b != NULL
+            && a != b && strcmp(a, b) == 0)
+            printf("[PASS] Two calls allocate independent strings\n");
+        else
+        {
+            printf("[FAIL] Two calls allocate independent strings\n");
+            g_failed++;
+        }
+        free(a);
+        free(b);
+    }
 
-    return (0);
+    printf("\n=== Source independence test ===\n");
+    {
+        char    source[] = "original";
+        char    *copy;
+
+        copy = ft_strdup(source);
+        g_tests++;
+        if (copy != NULL && copy != source
+            && strcmp(copy, source) == 0)
+        {
+            source[0] = 'X';
+            if (strcmp(copy, "original") == 0)
+                printf("[PASS] Copy survives source modification\n");
+            else
+            {
+                printf("[FAIL] Copy survives source modification\n");
+                g_failed++;
+            }
+        }
+        else
+        {
+            printf("[FAIL] Copy survives source modification\n");
+            g_failed++;
+        }
+        free(copy);
+    }
+
+    printf("\n=== Summary ===\n");
+    printf("Tests: %d\n", g_tests);
+    printf("Failed: %d\n", g_failed);
+    printf("Passed: %d\n", g_tests - g_failed);
+    return (g_failed != 0);
 }

@@ -3,10 +3,8 @@
 #include "./libft.h"
 
 void *ft_calloc(size_t nmemb, size_t size){
-    // printf("init");
 
     if (size != 0 && nmemb > SIZE_MAX / size){
-        // printf("overflow");
         return NULL;
     }
 
