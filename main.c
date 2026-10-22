@@ -25,9 +25,12 @@
 int main(void)
 {
 
-    char *h = "hello world";
-    char *sub = ft_substr(h, 3, 5);
-    printf("%s\n", sub);
+    char *h = "";
+    char *w = "";
 
-    free(sub);
+    char *res = ft_strjoin(h, w);
+    printf("%s, length: %zu", res, ft_strlen(res));
+    
+
+    free(res);
 }
