@@ -22,18 +22,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void)
+#include <stdio.h>
+
+int	main(void)
 {
-    void *res = calloc(0, 0);
+	unsigned int	start;
+	size_t			len;
+	char *src_ptr = "We are supercalifragilisticexpialidocious!";
 
-    printf("Pointer: %p\n", res);
+	printf("Source: '%s'\n\n",src_ptr);
 
-    if (res != NULL){
-        printf("pointer to res: %d\n", *(unsigned char *)res);
-    }
+	start = 7;
+	len = 9;
+	printf("start: %d\n", start);
+	printf("length: %zu\n", len);
+	printf("Substring: '%s'\n\n",ft_substr(src_ptr, start, len));
 
+	start = 7;
+	len = 99;
+	printf("start: %d\n", start);
+	printf("length: %zu\n", len);
+	printf("Substring: '%s'\n\n",ft_substr(src_ptr, start, len));
 
+	start = 99;
+	len = 7;
+	printf("start: %d\n", start);
+	printf("length: %zu\n", len);
+	printf("Substring: '%s'\n\n",ft_substr(src_ptr, start, len));
 
-    free(NULL);
-    return 0;
+	start = 7;
+	len = 9;
+	src_ptr = NULL;
+	printf("Source: '%s'\n",src_ptr);
+	printf("start: %d\n", start);
+	printf("length: %zu\n", len);
+	printf("Substring: '%s'\n",ft_substr(src_ptr, start, len));
+
+	return (0);
 }
