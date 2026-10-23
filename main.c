@@ -39,7 +39,6 @@ char **ft_split(char const *s, char c);
 ** Inside the "window" (the call to ft_split) the wrappers count allocations,
 ** fail the Nth one, and count live blocks so a leak is reported immediately.
 */
-#ifdef TEST_MALLOC_FAIL
 extern void *__real_malloc(size_t n);
 extern void *__real_calloc(size_t a, size_t b);
 extern void __real_free(void *p);
@@ -86,7 +85,6 @@ void __wrap_free(void *p)
         g_live--;
     __real_free(p);
 }
-#endif
 
 static int total = 0;
 static int fails = 0;
@@ -122,25 +120,25 @@ static size_t parse_expected(const char *expected, char *buf, char **words)
 }
 
 /* Independent reference splitter: builds the "a|b|c" form of the answer. */
-// static void ref_expected(const char *s, char c, char *out)
-// {
-//     size_t o = 0;
-//     int in_word = 0;
+static void ref_expected(const char *s, char c, char *out)
+{
+    size_t o = 0;
+    int in_word = 0;
 
-//     for (; *s; s++)
-//     {
-//         if (*s == c)
-//             in_word = 0;
-//         else
-//         {
-//             if (!in_word && o > 0)
-//                 out[o++] = '|';
-//             out[o++] = *s;
-//             in_word = 1;
-//         }
-//     }
-//     out[o] = '\0';
-// }
+    for (; *s; s++)
+    {
+        if (*s == c)
+            in_word = 0;
+        else
+        {
+            if (!in_word && o > 0)
+                out[o++] = '|';
+            out[o++] = *s;
+            in_word = 1;
+        }
+    }
+    out[o] = '\0';
+}
 
 static void free_words(char **res, size_t n)
 {
@@ -235,7 +233,6 @@ done:
     free(ewords);
 }
 
-#ifdef TEST_MALLOC_FAIL
 /* Fails allocation 1, then 2, then 3 ... inside ft_split. Every failing run
    must return NULL and leave no live block behind; the first run that does
    not fail must give the correct answer. */
@@ -294,172 +291,171 @@ static void check_failures(const char *name, const char *s, char c,
     free(ebuf);
     free(ewords);
 }
-#endif
 
 int main(int argc, char **argv)
 {
     /* --- basic splitting --- */
     check("two words", "hello world", ' ', "hello|world");
     check("five words", "a b c d e", ' ', "a|b|c|d|e");
-    // check("words of different length", "a bb ccc dddd eeeee", ' ',
-    //       "a|bb|ccc|dddd|eeeee");
-    // check("single-character words", "a b c", ' ', "a|b|c");
-    // check("two words, two letters", "ab cd", ' ', "ab|cd");
+    check("words of different length", "a bb ccc dddd eeeee", ' ',
+          "a|bb|ccc|dddd|eeeee");
+    check("single-character words", "a b c", ' ', "a|b|c");
+    check("two words, two letters", "ab cd", ' ', "ab|cd");
 
     /* --- no delimiter in the string: one word, still a copy --- */
-    // check("no delimiter present", "one", ' ', "one");
-    // check("single character", "x", ' ', "x");
-    // check("delimiter absent, other chars", "hello", ',', "hello");
+    check("no delimiter present", "one", ' ', "one");
+    check("single character", "x", ' ', "x");
+    check("delimiter absent, other chars", "hello", ',', "hello");
 
     /* --- repeated, leading and trailing delimiters --- */
-    // check("multiple, leading, trailing", "  hello  world  ", ' ', "hello|world");
-    // check("leading only", "   hello", ' ', "hello");
-    // check("trailing only", "hello   ", ' ', "hello");
-    // check("consecutive in the middle", "a,,b,,,c", ',', "a|b|c");
-    // check("single leading", ",a", ',', "a");
-    // check("single trailing", "a,", ',', "a");
-    // check("both ends, one word", ",a,", ',', "a");
-    // check("many at both ends", "xxaxxbxx", 'x', "a|b");
+    check("multiple, leading, trailing", "  hello  world  ", ' ', "hello|world");
+    check("leading only", "   hello", ' ', "hello");
+    check("trailing only", "hello   ", ' ', "hello");
+    check("consecutive in the middle", "a,,b,,,c", ',', "a|b|c");
+    check("single leading", ",a", ',', "a");
+    check("single trailing", "a,", ',', "a");
+    check("both ends, one word", ",a,", ',', "a");
+    check("many at both ends", "xxaxxbxx", 'x', "a|b");
 
     // /* --- nothing but delimiters, or nothing at all: {NULL}, never NULL --- */
-    // check("empty string", "", ',', "");
-    // check("empty string, space delimiter", "", ' ', "");
-    // check("single delimiter", ",", ',', "");
-    // check("only delimiters", ",,,,", ',', "");
-    // check("single space", " ", ' ', "");
-    // check("only spaces", "      ", ' ', "");
-    // check("all chars are the delimiter", "aaa", 'a', "");
-    // check("one char, equal to delimiter", "a", 'a', "");
+    check("empty string", "", ',', "");
+    check("empty string, space delimiter", "", ' ', "");
+    check("single delimiter", ",", ',', "");
+    check("only delimiters", ",,,,", ',', "");
+    check("single space", " ", ' ', "");
+    check("only spaces", "      ", ' ', "");
+    check("all chars are the delimiter", "aaa", 'a', "");
+    check("one char, equal to delimiter", "a", 'a', "");
 
     /* --- delimiter at one position of a word --- */
-    // check("delimiter first char", "abc", 'a', "bc");
-    // check("delimiter last char", "abc", 'c', "ab");
-    // check("delimiter in the middle", "abc", 'b', "a|c");
+    check("delimiter first char", "abc", 'a', "bc");
+    check("delimiter last char", "abc", 'c', "ab");
+    check("delimiter in the middle", "abc", 'b', "a|c");
 
     /* --- different delimiter characters --- */
-    // check("newline delimiter", "line1\nline2\n\nline3", '\n', "line1|line2|line3");
-    // check("tab delimiter", "a\tb\t\tc", '\t', "a|b|c");
-    // check("digit delimiter", "a1b2c3", '1', "a|b2c3");
-    // check("punctuation delimiter", "a.b.c", '.', "a|b|c");
-    // check("case sensitive, lower", "aAbB", 'a', "AbB");
-    // check("case sensitive, upper", "aAbB", 'A', "a|bB");
-    // check("high-bit delimiter 0xFF", "x\xffy\xffz", '\xff', "x|y|z");
-    // check("high-bit delimiter 0xE9", "x\xe9y", '\xe9', "x|y");
+    check("newline delimiter", "line1\nline2\n\nline3", '\n', "line1|line2|line3");
+    check("tab delimiter", "a\tb\t\tc", '\t', "a|b|c");
+    check("digit delimiter", "a1b2c3", '1', "a|b2c3");
+    check("punctuation delimiter", "a.b.c", '.', "a|b|c");
+    check("case sensitive, lower", "aAbB", 'a', "AbB");
+    check("case sensitive, upper", "aAbB", 'A', "a|bB");
+    check("high-bit delimiter 0xFF", "x\xffy\xffz", '\xff', "x|y|z");
+    check("high-bit delimiter 0xE9", "x\xe9y", '\xe9', "x|y");
 
     /* --- other whitespace is NOT a delimiter unless asked for --- */
-    // check("spaces kept inside words", "hello world,foo bar", ',',
-    //       "hello world|foo bar");
-    // check("tab kept when delimiter is space", "a\tb c", ' ', "a\tb|c");
-    // check("punctuation inside words", "!@# $%^", ' ', "!@#|$%^");
+    check("spaces kept inside words", "hello world,foo bar", ',',
+          "hello world|foo bar");
+    check("tab kept when delimiter is space", "a\tb c", ' ', "a\tb|c");
+    check("punctuation inside words", "!@# $%^", ' ', "!@#|$%^");
 
     /* --- delimiter '\0': nothing inside the string equals it, so the whole
            string is one word (or no word if it is empty) --- */
-    // check("delimiter is NUL, non-empty", "hello", '\0', "hello");
-    // check("delimiter is NUL, empty", "", '\0', "");
+    check("delimiter is NUL, non-empty", "hello", '\0', "hello");
+    check("delimiter is NUL, empty", "", '\0', "");
 
     /* --- NUL inside the buffer: s ends at the first NUL --- */
-    // {
-    //     char **res = ft_split("a b\0c d", ' ');
+    {
+        char **res = ft_split("a b\0c d", ' ');
 
-    //     total++;
-    //     if (!res)
-    //         fail("embedded NUL", "returned NULL");
-    //     else
-    //     {
-    //         size_t n = 0;
+        total++;
+        if (!res)
+            fail("embedded NUL", "returned NULL");
+        else
+        {
+            size_t n = 0;
 
-    //         while (n < 5 && res[n])
-    //             n++;
-    //         if (n != 2 || strcmp(res[0], "a") || strcmp(res[1], "b"))
-    //             fail("embedded NUL", "must stop at the first NUL");
-    //         if (n < 5)
-    //             free_words(res, n);
-    //     }
-    // }
+            while (n < 5 && res[n])
+                n++;
+            if (n != 2 || strcmp(res[0], "a") || strcmp(res[1], "b"))
+                fail("embedded NUL", "must stop at the first NUL");
+            if (n < 5)
+                free_words(res, n);
+        }
+    }
 
     /* --- large inputs --- */
-    // {
-    //     size_t n = 100000;
-    //     char *s = malloc(n + 3);
-    //     char *exp = malloc(n + 3);
+    {
+        size_t n = 100000;
+        char *s = malloc(n + 3);
+        char *exp = malloc(n + 3);
 
-    //     memset(s, 'a', n);
-    //     s[n] = ' ';
-    //     s[n + 1] = 'b';
-    //     s[n + 2] = '\0';
-    //     memcpy(exp, s, n);
-    //     exp[n] = '|';
-    //     exp[n + 1] = 'b';
-    //     exp[n + 2] = '\0';
-    //     check("one 100 000 char word + one more", s, ' ', exp);
-    //     free(s);
-    //     free(exp);
-    // }
-    // {
-    //     size_t words = 100000;
-    //     char *s = malloc(words * 2 + 1);
-    //     char *exp = malloc(words * 2 + 1);
+        memset(s, 'a', n);
+        s[n] = ' ';
+        s[n + 1] = 'b';
+        s[n + 2] = '\0';
+        memcpy(exp, s, n);
+        exp[n] = '|';
+        exp[n + 1] = 'b';
+        exp[n + 2] = '\0';
+        check("one 100 000 char word + one more", s, ' ', exp);
+        free(s);
+        free(exp);
+    }
+    {
+        size_t words = 100000;
+        char *s = malloc(words * 2 + 1);
+        char *exp = malloc(words * 2 + 1);
 
-    //     for (size_t i = 0; i < words; i++)
-    //     {
-    //         s[i * 2] = 'a';
-    //         s[i * 2 + 1] = ' ';
-    //         exp[i * 2] = 'a';
-    //         exp[i * 2 + 1] = '|';
-    //     }
-    //     s[words * 2] = '\0';
-    //     exp[words * 2 - 1] = '\0';
-    //     check("100 000 words", s, ' ', exp);
-    //     free(s);
-    //     free(exp);
-    // }
+        for (size_t i = 0; i < words; i++)
+        {
+            s[i * 2] = 'a';
+            s[i * 2 + 1] = ' ';
+            exp[i * 2] = 'a';
+            exp[i * 2 + 1] = '|';
+        }
+        s[words * 2] = '\0';
+        exp[words * 2 - 1] = '\0';
+        check("100 000 words", s, ' ', exp);
+        free(s);
+        free(exp);
+    }
 
     /* --- exhaustive sweep: every string of length 0..8 over {a, b, ','} and
            over {a, ',', ' '} with ',' as delimiter, against the reference --- */
-    // {
-    //     const char *alphabets[2] = {"ab,", "a, "};
-    //     char s[10];
-    //     char exp[32];
-    //     char name[64];
+    {
+        const char *alphabets[2] = {"ab,", "a, "};
+        char s[10];
+        char exp[32];
+        char name[64];
 
-    //     for (int a = 0; a < 2; a++)
-    //         for (int len = 0; len <= 8; len++)
-    //         {
-    //             int combos = 1;
+        for (int a = 0; a < 2; a++)
+            for (int len = 0; len <= 8; len++)
+            {
+                int combos = 1;
 
-    //             for (int k = 0; k < len; k++)
-    //                 combos *= 3;
-    //             for (int c = 0; c < combos; c++)
-    //             {
-    //                 int v = c;
+                for (int k = 0; k < len; k++)
+                    combos *= 3;
+                for (int c = 0; c < combos; c++)
+                {
+                    int v = c;
 
-    //                 for (int k = 0; k < len; k++)
-    //                 {
-    //                     s[k] = alphabets[a][v % 3];
-    //                     v /= 3;
-    //                 }
-    //                 s[len] = '\0';
-    //                 ref_expected(s, ',', exp);
-    //                 snprintf(name, sizeof name, "sweep \"%s\"", s);
-    //                 check(name, s, ',', exp);
-    //             }
-    //         }
-    // }
+                    for (int k = 0; k < len; k++)
+                    {
+                        s[k] = alphabets[a][v % 3];
+                        v /= 3;
+                    }
+                    s[len] = '\0';
+                    ref_expected(s, ',', exp);
+                    snprintf(name, sizeof name, "sweep \"%s\"", s);
+                    check(name, s, ',', exp);
+                }
+            }
+    }
 
     /* --- repeated calls: no hidden state, no leaks --- */
-    // for (int i = 0; i < 1000; i++)
-    // {
-    //     char **r = ft_split("hello big world", ' ');
+    for (int i = 0; i < 1000; i++)
+    {
+        char **r = ft_split("hello big world", ' ');
 
-    //     if (!r || !r[0] || !r[1] || !r[2] || r[3]
-    //         || strcmp(r[0], "hello") || strcmp(r[1], "big")
-    //         || strcmp(r[2], "world"))
-    //     {
-    //         fail("1000 repeated calls", "wrong result");
-    //         break;
-    //     }
-    //     free_words(r, 3);
-    // }
+        if (!r || !r[0] || !r[1] || !r[2] || r[3]
+            || strcmp(r[0], "hello") || strcmp(r[1], "big")
+            || strcmp(r[2], "world"))
+        {
+            fail("1000 repeated calls", "wrong result");
+            break;
+        }
+        free_words(r, 3);
+    }
     total++;
 
     /* --- NULL string: the subject does not define it, so it is only
@@ -472,7 +468,6 @@ int main(int argc, char **argv)
         free(r);
     }
 
-#ifdef TEST_MALLOC_FAIL
     /* --- a failing malloc at ANY point: NULL returned, nothing leaked --- */
     check_failures("fail: three words", "a b c", ' ', "a|b|c");
     check_failures("fail: four longer words", "hello world foo bar", ' ',
@@ -484,10 +479,7 @@ int main(int argc, char **argv)
     check_failures("fail: two words", "x y", ' ', "x|y");
     check_failures("fail: many words", "1 2 3 4 5 6 7 8 9 10 11 12", ' ',
                    "1|2|3|4|5|6|7|8|9|10|11|12");
-#else
-    printf("NOTE  malloc-failure tests skipped (see the header comment for "
-           "the compile flags)\n");
-#endif
+
 
     printf("%d/%d passed\n", total - fails, total);
     return fails != 0;
