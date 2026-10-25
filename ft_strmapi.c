@@ -6,17 +6,11 @@
 /*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/25 20:58:20 by ayouel-h          #+#    #+#             */
-/*   Updated: 2026/10/25 20:58:35 by ayouel-h         ###   ########.fr       */
+/*   Updated: 2026/10/25 21:13:03 by ayouel-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft.h"
-
-char	f(unsigned int index, char c)
-{
-	(void)index;
-	return (c - 32);
-}
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
