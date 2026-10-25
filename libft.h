@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
 
 int	ft_isalpha(int c);
 int	ft_isdigit(int d);
@@ -43,6 +44,7 @@ char **ft_split(char const *s, char c);
 char *ft_strmapi(char const *s, char (*f)(unsigned int, char));
 
 void ft_striteri(char *s, void (*f)(unsigned int, char*));
+void ft_putchar_fd(char c, int fd);
 
 #endif
 
