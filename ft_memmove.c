@@ -6,7 +6,7 @@
 /*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/15 10:56:58 by ayouel-h          #+#    #+#             */
-/*   Updated: 2026/10/15 11:00:39 by ayouel-h         ###   ########.fr       */
+/*   Updated: 2026/10/30 02:50:32 by ayouel-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 {
 	unsigned char		*t_dest;
 	const unsigned char	*t_src;
+	const unsigned char		*boundary;
+
+
+	boundary = src + n;
 
 	if (dest == src || n == 0)
 	{
@@ -28,7 +32,9 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 		while (n > 0)
 		{
 			n--;
-			*(t_dest + n) = *(t_src + n);
+			if ((t_dest + n) < boundary){
+				*(t_dest + n) = *(t_src + n);
+			}
 		}
 	}
 	else
@@ -37,3 +43,22 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
+#include <stdio.h>
+#include <string.h>
+int main()
+{
+	{char str[] = "xxxxx6";
+	printf("%s\n",(char *) memmove((void *)str+1,str,6));
+	printf("%s\n",(char *) ft_memmove((void *)str+1,str,6));
+}
+	
+	// {char str[] = "xxxxx6";
+	// 	printf("%s\n",(char *) ft_memmove((void *)str+1,str,10));
+	// 	printf("%s\n",(char *) memmove((void *)str+1,str,10));
+	// }
+
+	
+
+}
+
+
