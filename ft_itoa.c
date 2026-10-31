@@ -6,7 +6,7 @@
 /*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/25 18:58:11 by ayouel-h          #+#    #+#             */
-/*   Updated: 2026/10/25 19:00:25 by ayouel-h         ###   ########.fr       */
+/*   Updated: 2026/10/31 21:02:58 by ayouel-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,3 @@ char	*ft_itoa(int n)
 	convert(l_n, res, i);
 	return (res);
 }
-
-// int main(){
-// 	printf("%s\n", ft_itoa(1000000200));
-// }

@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/31 20:19:58 by ayouel-h          #+#    #+#             */
+/*   Updated: 2026/10/31 20:46:06 by ayouel-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./libft.h"
 
-int	ft_isspace(char c)
+static int	ft_isspace(char c)
 {
-	return (c == 32) || (c >= 9 && c <= 13);
+	return ((c == 32) || (c >= 9 && c <= 13));
 }
 
-void	skip_space(const char **nptr)
+static void	skip_space(const char **nptr)
 {
 	while (**nptr && ft_isspace(**nptr))
 		*nptr = *nptr + 1;
 }
 
-void	derive_sign(const char **nptr, int *sign)
+static void	derive_sign(const char **nptr, int *sign)
 {
 	if (**nptr)
 	{
@@ -27,15 +39,15 @@ void	derive_sign(const char **nptr, int *sign)
 	}
 }
 
-int	is_overflow(int sign, long *res, int to_add)
+static int	is_overflow(int sign, unsigned long *res, int to_add)
 {
-	if (sign == 1 && *res > ((LONG_MAX)-to_add) / 10)
+	if (sign == 1 && *res > ((unsigned long )(LONG_MAX)-to_add) / 10)
 	{
 		*res = LONG_MAX;
 		return (1);
 	}
-	else if (sign == -1 && (unsigned long)*res > (((LONG_MAX + (unsigned long)1)) - to_add)
-		/ 10)
+	else if (sign == -1 && *res > (((LONG_MAX
+					+ (unsigned long)1)) - to_add) / 10)
 	{
 		*res = LONG_MIN;
 		return (1);
@@ -45,18 +57,18 @@ int	is_overflow(int sign, long *res, int to_add)
 
 int	ft_atoi(const char *nptr)
 {
-	long	res;
-	int		sign;
+	unsigned long	res;
+	int				sign;
 
 	res = 0;
-    sign = 1;
+	sign = 1;
 	skip_space(&nptr);
 	derive_sign(&nptr, &sign);
 	while (*nptr && (*nptr >= '0' && *nptr <= '9'))
 	{
 		if (is_overflow(sign, &res, (*nptr - 48)))
 		{
-			return (int)(res);
+			return ((int)(res));
 		}
 		else
 		{
@@ -64,10 +76,5 @@ int	ft_atoi(const char *nptr)
 		}
 		nptr++;
 	}
-	return (int)(res * sign);
+	return ((int)(res * sign));
 }
-
-
-// int main(){
-//     printf("%d\n", ft_atoi("42"));
-// }

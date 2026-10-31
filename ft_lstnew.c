@@ -6,7 +6,7 @@
 /*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/26 12:39:07 by ayouel-h          #+#    #+#             */
-/*   Updated: 2026/10/26 12:39:09 by ayouel-h         ###   ########.fr       */
+/*   Updated: 2026/10/31 21:07:13 by ayouel-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,3 @@ t_list	*ft_lstnew(void *content)
 	node->content = content;
 	return (node);
 }
-
-// int main(){
-//     t_list *node = ft_lstnew("hello world");
-
-//     printf("%s\n", (char *)node->content);
-//     printf("%p\n", (char *)node->next);
-
-// }
