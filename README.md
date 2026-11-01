@@ -77,20 +77,21 @@ int main(void)
 
 ## Resources
 
-- man pages of the reimplemented libc functions (`man 3 strlen`, etc.)
-- [The Norm](https://www.intra.42.fr) — 42 school coding standard
-- [openbsd strlcpy/strlcat paper](https://man.openbsd.org/strlcpy) —
-  used as reference for the `ft_strlcpy` / `ft_strlcat` semantics
-- [Tripouille/libftTester](https://github.com/Tripouille/libftTester) —
-  tester used to validate the library
+- man pages of the reimplemented libc functions
+- [Makefile Tutorial](https://makefiletutorial.com/)
+- [The C Programming Language, 2nd edition (Kernighan & Ritchie)](https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/books/C_Book_2nd.pdf)
+- [The Linux Programming Interface (Michael Kerrisk)](https://broman.dev/download/The%20Linux%20Programming%20Interface.pdf)
 
 ### How AI was used
 
 AI tools were used as support, not to write the project: all functions
-were implemented by the project author. AI was used to:
+were implemented by the project author. AI was used as a companion for:
 
-- check Norm compliance and fix formatting issues (`norminette` findings);
-- clean up `libft.h` (remove an unused include, add missing prototypes);
-- run student testers and an additional sanitizer-based edge-case test
-  suite, and summarize the results in a test report;
-- draft this README.
+- understanding concepts and topics related to the project;
+- critiques and evaluation of my own work and approach;
+- a final project sweep to detect any issues (Norm compliance with
+  `norminette`, formatting problems, unused includes and missing
+  prototypes in `libft.h`, student testers and an additional
+  sanitizer-based edge-case test suite, with the results summarized
+  in a test report);
+- drafting this README.

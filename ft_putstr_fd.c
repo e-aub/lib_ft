@@ -6,11 +6,11 @@
 /*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/25 21:36:11 by ayouel-h          #+#    #+#             */
-/*   Updated: 2026/10/26 12:09:06 by ayouel-h         ###   ########.fr       */
+/*   Updated: 2026/11/01 15:11:35 by ayouel-h         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libft.h"
+#include "libft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
