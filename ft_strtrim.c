@@ -12,7 +12,7 @@
 
 #include "./libft.h"
 
-int	contains(char const *charset, char c)
+static int	contains(char const *charset, char c)
 {
 	while (*charset)
 	{
@@ -23,8 +23,8 @@ int	contains(char const *charset, char c)
 	return (0);
 }
 
-void	look_forward(size_t *start_idx, size_t len, char const *s1,
-		char const *set)
+static void	look_forward(size_t *start_idx, size_t len, char const *s1,
+			char const *set)
 {
 	while (*start_idx < len)
 	{
@@ -35,7 +35,7 @@ void	look_forward(size_t *start_idx, size_t len, char const *s1,
 	}
 }
 
-void	look_backward(size_t *end_idx, char const *s1, char const *set)
+static void	look_backward(size_t *end_idx, char const *s1, char const *set)
 {
 	while (*end_idx > 0)
 	{
@@ -46,7 +46,8 @@ void	look_backward(size_t *end_idx, char const *s1, char const *set)
 	}
 }
 
-char	*extract_trimmed(char const *s1, size_t start_idx, size_t end_idx)
+static char	*extract_trimmed(char const *s1, size_t start_idx,
+					size_t end_idx)
 {
 	size_t	size;
 	char	*res;

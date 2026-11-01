@@ -12,7 +12,7 @@
 
 #include "./libft.h"
 
-size_t	calcuate_words(char const *s, char c)
+static size_t	calcuate_words(char const *s, char c)
 {
 	size_t			tot;
 	unsigned char	prev_is_sep;
@@ -33,7 +33,7 @@ size_t	calcuate_words(char const *s, char c)
 	return (tot);
 }
 
-void	free_progress(char **spliced, size_t alloc_so_far)
+static void	free_progress(char **spliced, size_t alloc_so_far)
 {
 	size_t	i;
 
@@ -46,7 +46,8 @@ void	free_progress(char **spliced, size_t alloc_so_far)
 	free(spliced);
 }
 
-size_t	copy_word(char const *s, char c, char **spliced, size_t word_idx)
+static size_t	copy_word(char const *s, char c, char **spliced,
+					size_t word_idx)
 {
 	size_t	word_len;
 	size_t	k;

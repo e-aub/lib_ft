@@ -1,19 +1,35 @@
-char *ft_strrchr(const char *s, int c){
-    char *last;
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayouel-h <ayouel-h@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/10/31 20:19:58 by ayouel-h          #+#    #+#             */
+/*   Updated: 2026/10/31 20:46:06 by ayouel-h         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-    last = 0;
-    char c_c = (char)c;
-    while (*s)
-    {
-        if (*s == c_c){
-            last = (char *)s;
-        }
-        s++;
-    }
+#include "./libft.h"
 
-    if (*s == c_c){
-        last = (char *)s;
-    }
-    
-    return last;
+char	*ft_strrchr(const char *s, int c)
+{
+	char	*last;
+	char	c_c;
+
+	last = 0;
+	c_c = (char)c;
+	while (*s)
+	{
+		if (*s == c_c)
+		{
+			last = (char *)s;
+		}
+		s++;
+	}
+	if (*s == c_c)
+	{
+		last = (char *)s;
+	}
+	return (last);
 }
